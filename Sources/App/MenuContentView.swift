@@ -29,11 +29,17 @@ struct MenuContentView: View {
     }
 
     private var header: some View {
-        HStack {
+        HStack(spacing: 6) {
             Image(systemName: "slider.vertical.3")
             Text("Volume Mixer").font(.headline)
+            Text(appVersion).font(.caption).foregroundStyle(.secondary)
             Spacer()
         }
+    }
+
+    private var appVersion: String {
+        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+        return "v\(v)"
     }
 
     @ViewBuilder

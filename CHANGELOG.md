@@ -4,6 +4,12 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-07-08
+
+### Added
+- The running version is shown next to the title in the menu (also the first release
+  used to verify end-to-end auto-update from 0.3.0).
+
 ## [0.3.0] - 2026-07-08
 
 ### Added
@@ -47,6 +53,7 @@ All notable changes to this project are documented here. The format is based on
 - Robotic/garbled audio caused by a channel-layout mismatch when adjusting per-app volume.
 - Internal per-app tap aggregate devices leaking into the output-device picker.
 
+[0.4.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.4.0
 [0.3.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.3.0
 [0.2.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.2.0
 [0.1.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.1.0
