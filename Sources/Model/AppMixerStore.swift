@@ -10,6 +10,7 @@ final class AppMixerStore {
     let master = MasterVolumeController()
     let processes = AudioProcessMonitor()
     let permission = AudioCapturePermission()
+    let nowPlaying = NowPlayingController()
 
     @ObservationIgnored private let engine = TapMixerEngine()
 
@@ -28,7 +29,25 @@ final class AppMixerStore {
         master.onDefaultDeviceChanged = { [weak self] in self?.rebuildAll() }
 
         reconcile()
+        nowPlaying.start()
     }
+
+    // MARK: - Now Playing / transport
+
+    /// The current Now Playing media if it belongs to this app's row — i.e. this row is
+    /// the active music/video source. Returns nil for meeting apps (no Now Playing
+    /// session) and for media apps that aren't the current session.
+    func transport(for app: AudioApp) -> NowPlaying? {
+        guard let np = nowPlaying.current else { return nil }
+        let ids = [app.bundleID, app.ownerBundleID].compactMap { $0 }
+        let matches = ids.contains(np.bundleID)
+            || (np.parentBundleID.map { ids.contains($0) } ?? false)
+        return matches ? np : nil
+    }
+
+    func playPause(for app: AudioApp) { if transport(for: app) != nil { nowPlaying.send(.togglePlayPause) } }
+    func nextTrack(for app: AudioApp) { if transport(for: app) != nil { nowPlaying.send(.nextTrack) } }
+    func previousTrack(for app: AudioApp) { if transport(for: app) != nil { nowPlaying.send(.previousTrack) } }
 
     // MARK: - Per-app state
 

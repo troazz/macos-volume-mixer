@@ -7,7 +7,8 @@ import Observation
 struct AudioApp: Identifiable, Hashable {
     let id: AudioObjectID          // Core Audio process-object ID
     let pid: pid_t
-    let bundleID: String?
+    let bundleID: String?          // the audio process's bundle id (a helper, for browsers)
+    let ownerBundleID: String?     // the owning app's bundle id (e.g. Arc's main app)
     let name: String
     let icon: NSImage?             // resolved at build time (incl. helper→parent)
     let isRunningOutput: Bool
@@ -76,6 +77,7 @@ final class AudioProcessMonitor {
                 id: id,
                 pid: pid,
                 bundleID: bundleID,
+                ownerBundleID: owner?.bundleIdentifier,
                 name: owner?.localizedName ?? Self.fallbackName(bundleID: bundleID, pid: pid),
                 icon: owner?.icon,
                 isRunningOutput: running

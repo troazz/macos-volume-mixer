@@ -21,6 +21,12 @@ targets:
     deploymentTarget: "14.4"
     sources:
       - path: Sources
+      # Bundled MediaRemote adapter (framework + Perl script), copied verbatim into
+      # Contents/Resources/MediaRemoteAdapter/. Run by /usr/bin/perl at runtime — not
+      # linked — so it lives as a resource, not an embedded framework.
+      - path: Vendor/MediaRemoteAdapter
+        type: folder
+        buildPhase: resources
     settings:
       base:
         PRODUCT_NAME: VolumeMixer

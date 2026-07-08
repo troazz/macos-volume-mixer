@@ -16,6 +16,7 @@ extension, no installed audio driver.
 
 - 🎚️ **Per-app volume** — an independent slider for every app currently playing audio, from 0 % up to **200 % (boost)**.
 - 🔇 **Per-app mute**, a one-click **reset to 100 %**, and a **magnetic snap to 100 %** while dragging.
+- ⏯️ **Media controls** — play/pause/next/previous for the current music/video source (YouTube, Spotify, Apple Music…). Meeting apps (Teams, Meet) correctly show **no** transport, since they publish no Now Playing session.
 - 🔊 **Master volume & mute** for the current output device, kept in sync with the hardware/media keys.
 - 🎧 **Output-device picker** — switch speakers/headphones right from the menu.
 - 🔎 **Automatic app detection** — a live list that resolves browser/Electron audio helpers to the real app name and icon (Arc, Chrome, …).
@@ -94,6 +95,12 @@ Send that zip. Because it isn't notarized, the recipient does this **once**:
 
 Requirements on their Mac: **macOS 14.4 or later**. For a no-warning experience you'd
 need to join the Apple Developer Program and notarize the app.
+
+## Credits
+
+Now-playing detection and media control use [`ungive/mediaremote-adapter`](https://github.com/ungive/mediaremote-adapter)
+(BSD-3-Clause) — bundled prebuilt in `Vendor/MediaRemoteAdapter/`. It restores access to
+Apple's MediaRemote framework, which macOS 15.4+ otherwise limits to Apple's own apps.
 
 ## Known limitations (v1)
 
