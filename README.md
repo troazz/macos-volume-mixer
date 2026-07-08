@@ -44,6 +44,29 @@ Audio Recording**).
 The `.xcodeproj` is generated and git-ignored — edit `project.yml` and re-run
 `xcodegen generate` to change build settings or add files.
 
+## Sharing with someone else
+
+There's no paid Apple Developer ID here, so the app is **ad-hoc signed**. Build a
+universal (Intel + Apple Silicon) zip:
+
+```bash
+./scripts/package.sh        # → dist/VolumeMixer.zip
+```
+
+Send that zip. Because it isn't notarized, the recipient does this **once**:
+
+1. Unzip and move **VolumeMixer.app** to `/Applications`.
+2. Clear the quarantine flag (otherwise Gatekeeper says it's "damaged"):
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
+   ```
+   (Or: right-click the app → **Open** → **Open** in the dialog.)
+3. Launch it, click the menu-bar speaker icon, and grant the audio-capture prompt
+   on first per-app adjustment.
+
+Requirements on their Mac: **macOS 14.4 or later**. For a no-warning experience you'd
+need to join the Apple Developer Program and notarize the app.
+
 ## Known limitations (v1)
 
 - **Same-format assumption:** the mixing IOProc assumes the tap and output device

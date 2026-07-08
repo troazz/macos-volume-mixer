@@ -12,3 +12,6 @@ DerivedData/
 # Xcode user state
 xcuserdata/
 *.xcworkspace/xcuserdata/
+
+# Distribution builds
+dist/
