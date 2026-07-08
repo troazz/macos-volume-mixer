@@ -8,6 +8,22 @@ Built from scratch in Swift/SwiftUI for **macOS 14.4+** (developed on macOS 26 /
 Xcode 26). Per-app control uses the modern **Core Audio process-tap API** — no kernel
 extension, no installed audio driver.
 
+<p align="center">
+  <img src="docs/screenshot.png" alt="Volume Mixer menu-bar popover showing master volume, output device, and per-app sliders for Arc, Microsoft Teams, and Zed" width="360">
+</p>
+
+## Features
+
+- 🎚️ **Per-app volume** — an independent slider for every app currently playing audio, from 0 % up to **200 % (boost)**.
+- 🔇 **Per-app mute**, a one-click **reset to 100 %**, and a **magnetic snap to 100 %** while dragging.
+- 🔊 **Master volume & mute** for the current output device, kept in sync with the hardware/media keys.
+- 🎧 **Output-device picker** — switch speakers/headphones right from the menu.
+- 🔎 **Automatic app detection** — a live list that resolves browser/Electron audio helpers to the real app name and icon (Arc, Chrome, …).
+- 🎛️ **Multichannel loudness compensation** so levels stay correct on multi-output devices.
+- 💾 **Remembers your settings** per app (by bundle ID) across launches.
+- 🚀 **Launch at login**, menu-bar only — no Dock icon.
+- 🛠️ **No driver or kernel extension** — uses the modern Core Audio process-tap API (macOS 14.4+).
+
 ## Download
 
 **[⬇︎ Download the latest release](https://github.com/troazz/macos-volume-mixer/releases/latest/download/VolumeMixer.zip)** — universal (Apple Silicon + Intel), requires **macOS 14.4+**.
