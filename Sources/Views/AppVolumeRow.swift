@@ -5,6 +5,9 @@ struct AppVolumeRow: View {
     let app: AudioApp
     @Bindable var store: AppMixerStore
 
+    /// ±6% magnetic "stick" zone around 100% so unity gain is easy to land on.
+    private static let unitySnapWindow: Double = 0.06
+
     private var isMuted: Bool { store.isMuted(for: app) }
 
     var body: some View {
@@ -41,7 +44,10 @@ struct AppVolumeRow: View {
                 Slider(
                     value: Binding(
                         get: { store.volume(for: app) },
-                        set: { store.setVolume($0, for: app) }
+                        set: { raw in
+                            let snapped = abs(raw - 1.0) < Self.unitySnapWindow ? 1.0 : raw
+                            store.setVolume(snapped, for: app)
+                        }
                     ),
                     in: 0...AppMixerStore.maxGain
                 )
