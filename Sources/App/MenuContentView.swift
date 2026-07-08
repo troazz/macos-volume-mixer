@@ -3,6 +3,7 @@ import SwiftUI
 
 struct MenuContentView: View {
     @Bindable var store: AppMixerStore
+    let updater: AppUpdater
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
 
     var body: some View {
@@ -87,6 +88,9 @@ struct MenuContentView: View {
             .font(.caption)
 
             Spacer()
+
+            Button("Check for Updates…") { updater.checkForUpdates() }
+                .font(.caption)
 
             Button("Quit") { NSApplication.shared.terminate(nil) }
                 .keyboardShortcut("q")

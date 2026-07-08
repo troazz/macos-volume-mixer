@@ -3,10 +3,11 @@ import SwiftUI
 @main
 struct VolumeMixerApp: App {
     @State private var store = AppMixerStore()
+    private let updater = AppUpdater()
 
     var body: some Scene {
         MenuBarExtra {
-            MenuContentView(store: store)
+            MenuContentView(store: store, updater: updater)
         } label: {
             Image(systemName: menuBarSymbol)
         }

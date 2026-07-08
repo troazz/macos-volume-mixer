@@ -13,9 +13,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.2.0</string>
+	<string>0.3.0</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.4</string>
 	<key>CFBundleIconName</key>
@@ -28,5 +28,14 @@
 	<string>Volume Mixer routes each app's audio through itself to give you an independent volume slider per application.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Volume Mixer needs audio-capture access to control the volume of individual applications.</string>
+	<!-- Sparkle auto-update -->
+	<key>SUFeedURL</key>
+	<string>https://github.com/troazz/macos-volume-mixer/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>avBfu7ZUG+F2zcXC0lEWoV3GYcyBNNPO8GTy6yp4Ams=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
 </dict>
 </plist>

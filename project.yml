@@ -7,18 +7,24 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.2.0"
-    CURRENT_PROJECT_VERSION: "2"
+    MARKETING_VERSION: "0.3.0"
+    CURRENT_PROJECT_VERSION: "3"
     DEVELOPMENT_TEAM: ""
     # Local/personal use: ad-hoc "Sign to Run Locally". Open in Xcode and pick
     # your team for a stable signature (keeps the audio-capture permission grant).
     CODE_SIGN_STYLE: Automatic
     ENABLE_HARDENED_RUNTIME: YES
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: "2.9.0"
 targets:
   VolumeMixer:
     type: application
     platform: macOS
     deploymentTarget: "14.4"
+    dependencies:
+      - package: Sparkle
     sources:
       - path: Sources
       # Bundled MediaRemote adapter (framework + Perl script), copied verbatim into

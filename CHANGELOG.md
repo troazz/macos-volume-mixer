@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-07-08
+
+### Added
+- In-app **auto-update** via Sparkle — EdDSA-signed, so it needs no Apple Developer ID.
+  Automatic daily checks plus a **Check for Updates…** menu item; Sparkle shows its own
+  download/verify/install-and-relaunch UI. Each release is signed in CI and published
+  with an `appcast.xml` feed.
+
 ## [0.2.0] - 2026-07-08
 
 ### Added
@@ -39,5 +47,6 @@ All notable changes to this project are documented here. The format is based on
 - Robotic/garbled audio caused by a channel-layout mismatch when adjusting per-app volume.
 - Internal per-app tap aggregate devices leaking into the output-device picker.
 
+[0.3.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.3.0
 [0.2.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.2.0
 [0.1.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.1.0

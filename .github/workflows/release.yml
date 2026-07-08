@@ -43,10 +43,50 @@ jobs:
           ditto -c -k --keepParent "$APP" dist/VolumeMixer.zip
           echo "Architectures:"; lipo -archs "$APP/Contents/MacOS/VolumeMixer"
 
+      - name: Sign update and generate appcast
+        env:
+          SPARKLE_ED_PRIVATE_KEY: ${{ secrets.SPARKLE_ED_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SPARKLE_ED_PRIVATE_KEY:-}" ]; then
+            echo "::error::SPARKLE_ED_PRIVATE_KEY secret is empty — set it to the Sparkle EdDSA private key."
+            exit 1
+          fi
+          SPARKLE_VER=2.9.4
+          curl -sSL -o sparkle.tar.xz "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VER}/Sparkle-${SPARKLE_VER}.tar.xz"
+          mkdir -p sparkle && tar -xf sparkle.tar.xz -C sparkle
+          KEYFILE="$(mktemp)"
+          printf '%s' "${SPARKLE_ED_PRIVATE_KEY}" > "${KEYFILE}"
+          SIG="$(sparkle/bin/sign_update --ed-key-file "${KEYFILE}" dist/VolumeMixer.zip)"
+          rm -f "${KEYFILE}"
+          APP="build/Build/Products/Release/VolumeMixer.app"
+          SHORT_VER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "${APP}/Contents/Info.plist")"
+          BUILD_VER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "${APP}/Contents/Info.plist")"
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/VolumeMixer.zip"
+          PUBDATE="$(date -u +'%a, %d %b %Y %H:%M:%S +0000')"
+          printf '%s\n' \
+            '<?xml version="1.0" encoding="utf-8"?>' \
+            '<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">' \
+            '  <channel>' \
+            '    <title>Volume Mixer</title>' \
+            "    <item>" \
+            "      <title>${SHORT_VER}</title>" \
+            "      <pubDate>${PUBDATE}</pubDate>" \
+            "      <sparkle:version>${BUILD_VER}</sparkle:version>" \
+            "      <sparkle:shortVersionString>${SHORT_VER}</sparkle:shortVersionString>" \
+            "      <sparkle:minimumSystemVersion>14.4</sparkle:minimumSystemVersion>" \
+            "      <enclosure url=\"${URL}\" type=\"application/octet-stream\" ${SIG} />" \
+            "    </item>" \
+            '  </channel>' \
+            '</rss>' > dist/appcast.xml
+          echo "--- appcast.xml ---"; cat dist/appcast.xml
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/VolumeMixer.zip
+          files: |
+            dist/VolumeMixer.zip
+            dist/appcast.xml
           generate_release_notes: true
           body: |
             Universal (Apple Silicon + Intel), **ad-hoc signed** build. Requires **macOS 14.4+**.
