@@ -14,11 +14,17 @@ struct AppVolumeRow: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
                 icon
-                Text(app.name).lineLimit(1)
+                Text(app.name)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .layoutPriority(0)   // name yields (truncates) before controls shrink
 
                 // Media controls sit next to the name, only for the now-playing source.
                 if let transport = store.transport(for: app) {
                     transportControls(transport)
+                        .fixedSize()            // keep controls at full size
+                        .padding(.leading, 8)   // breathing room from the name
+                        .layoutPriority(1)
                 }
 
                 Spacer(minLength: 8)
