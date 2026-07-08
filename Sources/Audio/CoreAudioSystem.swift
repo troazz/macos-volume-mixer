@@ -36,10 +36,12 @@ enum CA {
         fallback: T
     ) -> T {
         var addr = address
-        var value = fallback
+        var result = fallback
         var size = UInt32(MemoryLayout<T>.size)
-        let status = AudioObjectGetPropertyData(object, &addr, 0, nil, &size, &value)
-        return status == noErr ? value : fallback
+        let status = withUnsafeMutableBytes(of: &result) { buffer in
+            AudioObjectGetPropertyData(object, &addr, 0, nil, &size, buffer.baseAddress!)
+        }
+        return status == noErr ? result : fallback
     }
 
     /// Write a single fixed-layout value. Returns the OSStatus (noErr on success).
@@ -50,9 +52,10 @@ enum CA {
         _ value: T
     ) -> OSStatus {
         var addr = address
-        var v = value
         let size = UInt32(MemoryLayout<T>.size)
-        return AudioObjectSetPropertyData(object, &addr, 0, nil, size, &v)
+        return withUnsafeBytes(of: value) { buffer in
+            AudioObjectSetPropertyData(object, &addr, 0, nil, size, buffer.baseAddress!)
+        }
     }
 
     /// Read a variable-length array property (e.g. device or process object lists).
