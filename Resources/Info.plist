@@ -18,6 +18,8 @@
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.4</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<!-- Menu-bar agent: no Dock icon, no main window -->
 	<key>LSUIElement</key>
 	<true/>
