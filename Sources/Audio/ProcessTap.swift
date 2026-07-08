@@ -10,6 +10,10 @@ import Foundation
 /// then run an IOProc that multiplies the tapped samples by `gain` and writes them to
 /// the output — so the user hears the app at the volume we choose (0 … boost).
 final class ProcessTap {
+    /// Prefix on our private aggregate devices' UIDs so the output-device picker can
+    /// recognize and hide them (they must never be user-selectable outputs).
+    static let aggregateUIDPrefix = "VolumeMixerAgg-"
+
     let processObjectID: AudioObjectID
 
     private let outputDeviceUID: String
@@ -58,7 +62,7 @@ final class ProcessTap {
         tapID = newTapID
 
         // 2. Wrap it in a private aggregate device fronting the real output device.
-        let aggregateUID = UUID().uuidString
+        let aggregateUID = Self.aggregateUIDPrefix + UUID().uuidString
         let config: [String: Any] = [
             kAudioAggregateDeviceNameKey: "VolumeMixer-\(processObjectID)",
             kAudioAggregateDeviceUIDKey: aggregateUID,

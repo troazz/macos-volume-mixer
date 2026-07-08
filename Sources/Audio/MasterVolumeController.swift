@@ -56,8 +56,10 @@ final class MasterVolumeController {
         let ids = CA.array(CA.system, CA.address(kAudioHardwarePropertyDevices), of: AudioObjectID.self)
         devices = ids.compactMap { id in
             guard Self.hasOutputStreams(id) else { return nil }
-            let name = CA.string(id, CA.address(kAudioObjectPropertyName)) ?? "Device \(id)"
             let uid = CA.string(id, CA.address(kAudioDevicePropertyDeviceUID)) ?? ""
+            // Hide our own per-app tap aggregate devices from the picker.
+            guard !uid.hasPrefix(ProcessTap.aggregateUIDPrefix) else { return nil }
+            let name = CA.string(id, CA.address(kAudioObjectPropertyName)) ?? "Device \(id)"
             return AudioDevice(id: id, name: name, uid: uid)
         }
     }
