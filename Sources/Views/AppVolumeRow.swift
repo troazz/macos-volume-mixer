@@ -92,6 +92,12 @@ struct AppVolumeRow: View {
         .buttonStyle(.borderless)
         .controlSize(.small)
         .imageScale(.small)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(.quaternary)
+        )
     }
 
     @ViewBuilder
