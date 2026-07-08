@@ -15,7 +15,14 @@ struct AppVolumeRow: View {
             HStack(spacing: 6) {
                 icon
                 Text(app.name).lineLimit(1)
-                Spacer()
+
+                // Media controls sit next to the name, only for the now-playing source.
+                if let transport = store.transport(for: app) {
+                    transportControls(transport)
+                }
+
+                Spacer(minLength: 8)
+
                 if !store.isDefault(for: app) {
                     Button {
                         store.reset(for: app)
@@ -53,32 +60,32 @@ struct AppVolumeRow: View {
                 )
                 .disabled(isMuted)
             }
-
-            // Transport controls, only for the current Now Playing (music/video) source.
-            if let transport = store.transport(for: app) {
-                HStack(spacing: 18) {
-                    Spacer()
-                    Button { store.previousTrack(for: app) } label: {
-                        Image(systemName: "backward.fill")
-                    }
-                    .help("Previous")
-
-                    Button { store.playPause(for: app) } label: {
-                        Image(systemName: transport.isPlaying ? "pause.fill" : "play.fill")
-                            .frame(width: 16)
-                    }
-                    .help(transport.isPlaying ? "Pause" : "Play")
-
-                    Button { store.nextTrack(for: app) } label: {
-                        Image(systemName: "forward.fill")
-                    }
-                    .help("Next")
-                    Spacer()
-                }
-                .buttonStyle(.borderless)
-                .padding(.top, 2)
-            }
         }
+    }
+
+    /// Compact inline play/pause/next/previous for the current now-playing source.
+    @ViewBuilder
+    private func transportControls(_ transport: NowPlaying) -> some View {
+        HStack(spacing: 10) {
+            Button { store.previousTrack(for: app) } label: {
+                Image(systemName: "backward.fill")
+            }
+            .help("Previous")
+
+            Button { store.playPause(for: app) } label: {
+                Image(systemName: transport.isPlaying ? "pause.fill" : "play.fill")
+                    .frame(width: 12)
+            }
+            .help(transport.isPlaying ? "Pause" : "Play")
+
+            Button { store.nextTrack(for: app) } label: {
+                Image(systemName: "forward.fill")
+            }
+            .help("Next")
+        }
+        .buttonStyle(.borderless)
+        .controlSize(.small)
+        .imageScale(.small)
     }
 
     @ViewBuilder
