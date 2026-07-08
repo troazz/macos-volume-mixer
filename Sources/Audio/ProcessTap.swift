@@ -86,42 +86,13 @@ final class ProcessTap {
         }
         aggregateID = newAggregate
 
-        // 3. IOProc: scaled copy of tap input → device output.
+        // 3. IOProc: channel/interleave-aware scaled copy of tap input → device output.
         let gainPtr = self.gainPtr
         let ioBlock: AudioDeviceIOBlock = { _, inInputData, _, outOutputData, _ in
             let gain = gainPtr.pointee
             let input = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: inInputData))
             let output = UnsafeMutableAudioBufferListPointer(outOutputData)
-            let paired = min(input.count, output.count)
-
-            var i = 0
-            while i < paired {
-                let inBuffer = input[i]
-                let outBuffer = output[i]
-                if let src = inBuffer.mData, let dst = outBuffer.mData {
-                    let copyBytes = min(inBuffer.mDataByteSize, outBuffer.mDataByteSize)
-                    if gain == 1.0 {
-                        memcpy(dst, src, Int(copyBytes))
-                    } else {
-                        let count = Int(copyBytes) / MemoryLayout<Float32>.size
-                        let s = src.assumingMemoryBound(to: Float32.self)
-                        let d = dst.assumingMemoryBound(to: Float32.self)
-                        var f = 0
-                        while f < count { d[f] = s[f] * gain; f += 1 }
-                    }
-                    // Silence any trailing bytes the input didn't fill.
-                    if outBuffer.mDataByteSize > copyBytes {
-                        memset(dst.advanced(by: Int(copyBytes)), 0, Int(outBuffer.mDataByteSize - copyBytes))
-                    }
-                }
-                i += 1
-            }
-            // Silence output buffers with no matching input stream.
-            var j = paired
-            while j < output.count {
-                if let dst = output[j].mData { memset(dst, 0, Int(output[j].mDataByteSize)) }
-                j += 1
-            }
+            ProcessTap.mix(from: input, to: output, gain: gain)
         }
 
         var newProcID: AudioDeviceIOProcID?
@@ -145,6 +116,80 @@ final class ProcessTap {
     }
 
     func stop() { cleanup() }
+
+    // MARK: - Real-time mixing
+
+    /// Copy `input` → `output` per channel, applying `gain`, correctly handling
+    /// interleaved vs. non-interleaved layouts and differing channel counts (the tap
+    /// mixdown is interleaved stereo; most output devices are non-interleaved — a
+    /// naive byte copy between them is what produced the "robot" garble). Assumes
+    /// Float32 samples at a matching sample rate (the aggregate resamples sub-devices
+    /// to its nominal rate, so frame counts line up).
+    static func mix(from input: UnsafeMutableAudioBufferListPointer,
+                    to output: UnsafeMutableAudioBufferListPointer,
+                    gain: Float32) {
+        guard output.count > 0 else { return }
+
+        let outInterleaved = output.count == 1 && output[0].mNumberChannels > 1
+        let outChannels = outInterleaved ? Int(output[0].mNumberChannels) : output.count
+        let outFrames = outInterleaved
+            ? Int(output[0].mDataByteSize) / (Int(output[0].mNumberChannels) * MemoryLayout<Float32>.size)
+            : Int(output[0].mDataByteSize) / MemoryLayout<Float32>.size
+
+        // No usable input → output silence.
+        guard input.count > 0, input[0].mData != nil else {
+            for buffer in output {
+                if let dst = buffer.mData { memset(dst, 0, Int(buffer.mDataByteSize)) }
+            }
+            return
+        }
+
+        let inInterleaved = input.count == 1 && input[0].mNumberChannels > 1
+        let inChannels = inInterleaved ? Int(input[0].mNumberChannels) : input.count
+        let inFrames = inInterleaved
+            ? Int(input[0].mDataByteSize) / (Int(input[0].mNumberChannels) * MemoryLayout<Float32>.size)
+            : Int(input[0].mDataByteSize) / MemoryLayout<Float32>.size
+
+        let frames = min(inFrames, outFrames)
+
+        // (base pointer, stride between successive frames of a channel).
+        func inChannel(_ ch: Int) -> (UnsafeMutablePointer<Float32>, Int)? {
+            if inInterleaved {
+                guard let base = input[0].mData?.assumingMemoryBound(to: Float32.self) else { return nil }
+                return (base + ch, inChannels)
+            } else {
+                guard ch < input.count, let base = input[ch].mData?.assumingMemoryBound(to: Float32.self) else { return nil }
+                return (base, 1)
+            }
+        }
+        func outChannel(_ ch: Int) -> (UnsafeMutablePointer<Float32>, Int)? {
+            if outInterleaved {
+                guard let base = output[0].mData?.assumingMemoryBound(to: Float32.self) else { return nil }
+                return (base + ch, outChannels)
+            } else {
+                guard ch < output.count, let base = output[ch].mData?.assumingMemoryBound(to: Float32.self) else { return nil }
+                return (base, 1)
+            }
+        }
+
+        for co in 0..<outChannels {
+            guard let (dst, dStride) = outChannel(co) else { continue }
+            // Map output channel to an input channel (duplicate last if fewer inputs).
+            let ci = co < inChannels ? co : inChannels - 1
+            if let (src, sStride) = inChannel(ci) {
+                var f = 0
+                while f < frames {
+                    dst[f * dStride] = src[f * sStride] * gain
+                    f += 1
+                }
+                var t = frames
+                while t < outFrames { dst[t * dStride] = 0; t += 1 }  // pad if short
+            } else {
+                var t = 0
+                while t < outFrames { dst[t * dStride] = 0; t += 1 }
+            }
+        }
+    }
 
     private func cleanup() {
         if aggregateID != kAudioObjectUnknown {
