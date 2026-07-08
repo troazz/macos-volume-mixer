@@ -1,0 +1,53 @@
+name: Release
+
+# Publish a versioned GitHub Release with the built app whenever a v* tag is
+# pushed (e.g. `git tag v0.2.0 && git push origin v0.2.0`). Also runnable manually.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write   # needed to create the release
+
+jobs:
+  build-and-release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build universal Release (ad-hoc signed)
+        run: |
+          xcodebuild -project VolumeMixer.xcodeproj -scheme VolumeMixer \
+            -configuration Release -derivedDataPath build \
+            -destination 'generic/platform=macOS' \
+            ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="-" \
+            build
+
+      - name: Package VolumeMixer.zip
+        run: |
+          APP="build/Build/Products/Release/VolumeMixer.app"
+          mkdir -p dist
+          ditto -c -k --keepParent "$APP" dist/VolumeMixer.zip
+          echo "Architectures:"; lipo -archs "$APP/Contents/MacOS/VolumeMixer"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/VolumeMixer.zip
+          generate_release_notes: true
+          body: |
+            Universal (Apple Silicon + Intel), **ad-hoc signed** build. Requires **macOS 14.4+**.
+
+            After downloading, clear the quarantine flag once (it isn't notarized):
+            ```
+            xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
+            ```
+            or right-click the app → **Open** → **Open**.

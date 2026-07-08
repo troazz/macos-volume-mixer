@@ -8,6 +8,18 @@ Built from scratch in Swift/SwiftUI for **macOS 14.4+** (developed on macOS 26 /
 Xcode 26). Per-app control uses the modern **Core Audio process-tap API** — no kernel
 extension, no installed audio driver.
 
+## Download
+
+**[⬇︎ Download the latest release](https://github.com/troazz/macos-volume-mixer/releases/latest/download/VolumeMixer.zip)** — universal (Apple Silicon + Intel), requires **macOS 14.4+**.
+
+It isn't notarized, so after unzipping and moving **VolumeMixer.app** to `/Applications`, clear the quarantine flag once:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
+```
+
+(or right-click the app → **Open** → **Open**). Then click the menu-bar speaker icon and grant the audio-capture prompt on first per-app adjustment. All releases are on the [Releases page](https://github.com/troazz/macos-volume-mixer/releases).
+
 ## How it works
 
 - **Master volume / mute / device picker** — plain Core Audio device properties
