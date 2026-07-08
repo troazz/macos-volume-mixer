@@ -9,7 +9,7 @@ Xcode 26). Per-app control uses the modern **Core Audio process-tap API** — no
 extension, no installed audio driver.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Volume Mixer menu-bar popover showing master volume, output device, and per-app sliders for Arc, Microsoft Teams, and Zed" width="360">
+  <img src="https://raw.githubusercontent.com/troazz/macos-volume-mixer/main/docs/screenshot.png" alt="Volume Mixer menu-bar popover showing master volume, output device, and per-app sliders for Arc, Microsoft Teams, and Zed" width="360">
 </p>
 
 ## Features
