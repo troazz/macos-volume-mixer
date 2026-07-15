@@ -53,7 +53,7 @@ All notable changes to this project are documented here. The format is based on
 - Robotic/garbled audio caused by a channel-layout mismatch when adjusting per-app volume.
 - Internal per-app tap aggregate devices leaking into the output-device picker.
 
-[0.4.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.4.0
-[0.3.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.3.0
-[0.2.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.2.0
-[0.1.0]: https://github.com/troazz/macos-volume-mixer/releases/tag/v0.1.0
+[0.4.0]: https://github.com/troazz/swara/releases/tag/v0.4.0
+[0.3.0]: https://github.com/troazz/swara/releases/tag/v0.3.0
+[0.2.0]: https://github.com/troazz/swara/releases/tag/v0.2.0
+[0.1.0]: https://github.com/troazz/swara/releases/tag/v0.1.0

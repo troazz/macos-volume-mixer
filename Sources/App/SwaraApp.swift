@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct VolumeMixerApp: App {
+struct SwaraApp: App {
     @State private var store = AppMixerStore()
     private let updater = AppUpdater()
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build a shareable, universal (Intel + Apple Silicon), ad-hoc-signed release of
-# Volume Mixer and zip it to dist/VolumeMixer.zip.
+# Swara and zip it to dist/Swara.zip.
 #
 # Note: ad-hoc signed (no Apple Developer ID), so the recipient must clear the
 # quarantine flag once — see the "Sharing" section of README.md.
@@ -12,16 +12,16 @@ trap 'rm -rf "$BUILD_DIR"' EXIT
 
 command -v xcodegen >/dev/null && xcodegen generate
 
-xcodebuild -project VolumeMixer.xcodeproj -scheme VolumeMixer -configuration Release \
+xcodebuild -project Swara.xcodeproj -scheme Swara -configuration Release \
   -derivedDataPath "$BUILD_DIR" -destination 'platform=macOS' \
   ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
   CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="-" \
   build
 
-APP="$BUILD_DIR/Build/Products/Release/VolumeMixer.app"
+APP="$BUILD_DIR/Build/Products/Release/Swara.app"
 mkdir -p dist
-rm -f dist/VolumeMixer.zip
-ditto -c -k --keepParent "$APP" dist/VolumeMixer.zip
+rm -f dist/Swara.zip
+ditto -c -k --keepParent "$APP" dist/Swara.zip
 
-echo "Packaged: dist/VolumeMixer.zip"
-lipo -archs "$APP/Contents/MacOS/VolumeMixer"
+echo "Packaged: dist/Swara.zip"
+lipo -archs "$APP/Contents/MacOS/Swara"

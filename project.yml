@@ -1,6 +1,6 @@
-name: VolumeMixer
+name: Swara
 options:
-  bundleIdPrefix: com.volumemixer
+  bundleIdPrefix: io.github.troazz
   createIntermediateGroups: true
   deploymentTarget:
     macOS: "14.4"
@@ -19,7 +19,7 @@ packages:
     url: https://github.com/sparkle-project/Sparkle
     from: "2.9.0"
 targets:
-  VolumeMixer:
+  Swara:
     type: application
     platform: macOS
     deploymentTarget: "14.4"
@@ -35,10 +35,10 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_NAME: VolumeMixer
-        PRODUCT_BUNDLE_IDENTIFIER: com.volumemixer.app
+        PRODUCT_NAME: Swara
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.troazz.swara
         INFOPLIST_FILE: Resources/Info.plist
-        CODE_SIGN_ENTITLEMENTS: VolumeMixer.entitlements
+        CODE_SIGN_ENTITLEMENTS: Swara.entitlements
         GENERATE_INFOPLIST_FILE: NO
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         COMBINE_HIDPI_IMAGES: YES

@@ -1,4 +1,4 @@
-// Renders the Volume Mixer app icon: three mixer faders on a blue→indigo squircle.
+// Renders the Swara app icon: three mixer faders on a blue→indigo squircle.
 // Usage: swift scripts/make_icon.swift <output_1024.png>
 import CoreGraphics
 import Foundation

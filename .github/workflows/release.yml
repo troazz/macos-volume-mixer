@@ -29,19 +29,19 @@ jobs:
 
       - name: Build universal Release (ad-hoc signed)
         run: |
-          xcodebuild -project VolumeMixer.xcodeproj -scheme VolumeMixer \
+          xcodebuild -project Swara.xcodeproj -scheme Swara \
             -configuration Release -derivedDataPath build \
             -destination 'generic/platform=macOS' \
             ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
             CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="-" \
             build
 
-      - name: Package VolumeMixer.zip
+      - name: Package Swara.zip
         run: |
-          APP="build/Build/Products/Release/VolumeMixer.app"
+          APP="build/Build/Products/Release/Swara.app"
           mkdir -p dist
-          ditto -c -k --keepParent "$APP" dist/VolumeMixer.zip
-          echo "Architectures:"; lipo -archs "$APP/Contents/MacOS/VolumeMixer"
+          ditto -c -k --keepParent "$APP" dist/Swara.zip
+          echo "Architectures:"; lipo -archs "$APP/Contents/MacOS/Swara"
 
       - name: Sign update and generate appcast
         env:
@@ -57,18 +57,18 @@ jobs:
           mkdir -p sparkle && tar -xf sparkle.tar.xz -C sparkle
           KEYFILE="$(mktemp)"
           printf '%s' "${SPARKLE_ED_PRIVATE_KEY}" > "${KEYFILE}"
-          SIG="$(sparkle/bin/sign_update --ed-key-file "${KEYFILE}" dist/VolumeMixer.zip)"
+          SIG="$(sparkle/bin/sign_update --ed-key-file "${KEYFILE}" dist/Swara.zip)"
           rm -f "${KEYFILE}"
-          APP="build/Build/Products/Release/VolumeMixer.app"
+          APP="build/Build/Products/Release/Swara.app"
           SHORT_VER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "${APP}/Contents/Info.plist")"
           BUILD_VER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "${APP}/Contents/Info.plist")"
-          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/VolumeMixer.zip"
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/Swara.zip"
           PUBDATE="$(date -u +'%a, %d %b %Y %H:%M:%S +0000')"
           printf '%s\n' \
             '<?xml version="1.0" encoding="utf-8"?>' \
             '<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">' \
             '  <channel>' \
-            '    <title>Volume Mixer</title>' \
+            '    <title>Swara</title>' \
             "    <item>" \
             "      <title>${SHORT_VER}</title>" \
             "      <pubDate>${PUBDATE}</pubDate>" \
@@ -85,7 +85,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/VolumeMixer.zip
+            dist/Swara.zip
             dist/appcast.xml
           generate_release_notes: true
           body: |
@@ -93,6 +93,6 @@ jobs:
 
             After downloading, clear the quarantine flag once (it isn't notarized):
             ```
-            xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
+            xattr -dr com.apple.quarantine /Applications/Swara.app
             ```
             or right-click the app → **Open** → **Open**.

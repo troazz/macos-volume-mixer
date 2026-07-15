@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>VolumeMixer</string>
+	<string>Swara</string>
 	<key>CFBundleDisplayName</key>
-	<string>Volume Mixer</string>
+	<string>Swara</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.volumemixer.app</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleExecutable</key>
-	<string>VolumeMixer</string>
+	<string>Swara</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -25,12 +25,12 @@
 	<true/>
 	<!-- Shown when the app requests permission to capture other apps' audio (process taps) -->
 	<key>NSAudioCaptureUsageDescription</key>
-	<string>Volume Mixer routes each app's audio through itself to give you an independent volume slider per application.</string>
+	<string>Swara routes each app's audio through itself to give you an independent volume slider per application.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Volume Mixer needs audio-capture access to control the volume of individual applications.</string>
+	<string>Swara needs audio-capture access to control the volume of individual applications.</string>
 	<!-- Sparkle auto-update -->
 	<key>SUFeedURL</key>
-	<string>https://github.com/troazz/macos-volume-mixer/releases/latest/download/appcast.xml</string>
+	<string>https://github.com/troazz/swara/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>avBfu7ZUG+F2zcXC0lEWoV3GYcyBNNPO8GTy6yp4Ams=</string>
 	<key>SUEnableAutomaticChecks</key>

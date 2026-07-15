@@ -1,6 +1,6 @@
-# Volume Mixer
+# Swara
 
-A macOS menu-bar app (no Dock icon) that gives you a Windows-style volume mixer:
+*Swara* — Sanskrit/Malay for **"sound"** — is a macOS menu-bar app (no Dock icon) that gives you a Windows-style volume mixer:
 an independent volume slider + mute for **each app currently playing audio**, plus
 a **master volume** control and an **output-device picker**.
 
@@ -9,7 +9,7 @@ Xcode 26). Per-app control uses the modern **Core Audio process-tap API** — no
 extension, no installed audio driver.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/troazz/macos-volume-mixer/main/docs/screenshot.png" alt="Volume Mixer menu-bar popover showing master volume, output device, and per-app sliders for Arc, Microsoft Teams, and Zed" width="360">
+  <img src="https://raw.githubusercontent.com/troazz/swara/main/docs/screenshot.png" alt="Swara menu-bar popover showing master volume, output device, and per-app sliders for Arc, Microsoft Teams, and Zed" width="360">
 </p>
 
 ## Features
@@ -27,15 +27,15 @@ extension, no installed audio driver.
 
 ## Download
 
-**[⬇︎ Download the latest release](https://github.com/troazz/macos-volume-mixer/releases/latest/download/VolumeMixer.zip)** — universal (Apple Silicon + Intel), requires **macOS 14.4+**.
+**[⬇︎ Download the latest release](https://github.com/troazz/swara/releases/latest/download/Swara.zip)** — universal (Apple Silicon + Intel), requires **macOS 14.4+**.
 
-It isn't notarized, so after unzipping and moving **VolumeMixer.app** to `/Applications`, clear the quarantine flag once:
+It isn't notarized, so after unzipping and moving **Swara.app** to `/Applications`, clear the quarantine flag once:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
+xattr -dr com.apple.quarantine /Applications/Swara.app
 ```
 
-(or right-click the app → **Open** → **Open**). Then click the menu-bar speaker icon and grant the audio-capture prompt on first per-app adjustment. All releases are on the [Releases page](https://github.com/troazz/macos-volume-mixer/releases).
+(or right-click the app → **Open** → **Open**). Then click the menu-bar speaker icon and grant the audio-capture prompt on first per-app adjustment. All releases are on the [Releases page](https://github.com/troazz/swara/releases).
 
 ## How it works
 
@@ -60,8 +60,8 @@ xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
 
 ```bash
 brew install xcodegen          # one-time
-xcodegen generate              # regenerates VolumeMixer.xcodeproj from project.yml
-open VolumeMixer.xcodeproj      # then Build & Run (⌘R) in Xcode
+xcodegen generate              # regenerates Swara.xcodeproj from project.yml
+open Swara.xcodeproj      # then Build & Run (⌘R) in Xcode
 ```
 
 In Xcode, select your team under **Signing & Capabilities** (or "Sign to Run
@@ -79,15 +79,15 @@ There's no paid Apple Developer ID here, so the app is **ad-hoc signed**. Build 
 universal (Intel + Apple Silicon) zip:
 
 ```bash
-./scripts/package.sh        # → dist/VolumeMixer.zip
+./scripts/package.sh        # → dist/Swara.zip
 ```
 
 Send that zip. Because it isn't notarized, the recipient does this **once**:
 
-1. Unzip and move **VolumeMixer.app** to `/Applications`.
+1. Unzip and move **Swara.app** to `/Applications`.
 2. Clear the quarantine flag (otherwise Gatekeeper says it's "damaged"):
    ```bash
-   xattr -dr com.apple.quarantine /Applications/VolumeMixer.app
+   xattr -dr com.apple.quarantine /Applications/Swara.app
    ```
    (Or: right-click the app → **Open** → **Open** in the dialog.)
 3. Launch it, click the menu-bar speaker icon, and grant the audio-capture prompt

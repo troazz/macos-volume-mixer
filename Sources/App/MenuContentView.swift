@@ -31,7 +31,7 @@ struct MenuContentView: View {
     private var header: some View {
         HStack(spacing: 6) {
             Image(systemName: "slider.vertical.3")
-            Text("Volume Mixer").font(.headline)
+            Text("Swara").font(.headline)
             Text(appVersion).font(.caption).foregroundStyle(.secondary)
             Spacer()
         }

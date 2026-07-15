@@ -12,7 +12,7 @@ import Foundation
 final class ProcessTap {
     /// Prefix on our private aggregate devices' UIDs so the output-device picker can
     /// recognize and hide them (they must never be user-selectable outputs).
-    static let aggregateUIDPrefix = "VolumeMixerAgg-"
+    static let aggregateUIDPrefix = "SwaraAgg-"
 
     let processObjectID: AudioObjectID
 
@@ -51,7 +51,7 @@ final class ProcessTap {
         let description = CATapDescription(stereoMixdownOfProcesses: [processObjectID])
         description.uuid = UUID()
         description.muteBehavior = .mutedWhenTapped
-        description.name = "VolumeMixerTap-\(processObjectID)"
+        description.name = "SwaraTap-\(processObjectID)"
 
         var newTapID = AudioObjectID(kAudioObjectUnknown)
         var err = AudioHardwareCreateProcessTap(description, &newTapID)
@@ -64,7 +64,7 @@ final class ProcessTap {
         // 2. Wrap it in a private aggregate device fronting the real output device.
         let aggregateUID = Self.aggregateUIDPrefix + UUID().uuidString
         let config: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "VolumeMixer-\(processObjectID)",
+            kAudioAggregateDeviceNameKey: "Swara-\(processObjectID)",
             kAudioAggregateDeviceUIDKey: aggregateUID,
             kAudioAggregateDeviceMainSubDeviceKey: outputDeviceUID,
             kAudioAggregateDeviceIsPrivateKey: true,

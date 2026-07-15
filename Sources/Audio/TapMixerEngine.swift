@@ -14,7 +14,7 @@ import Foundation
 /// device's channel count — a no-op for ordinary 2-channel devices, a boost only on
 /// multichannel hardware where the attenuation actually appears.
 final class TapMixerEngine {
-    private let ioQueue = DispatchQueue(label: "com.volumemixer.tap-io", qos: .userInitiated)
+    private let ioQueue = DispatchQueue(label: "io.github.troazz.swara.tap-io", qos: .userInitiated)
     private var taps: [AudioObjectID: ProcessTap] = [:]   // keyed by process object ID
 
     func hasTap(for processObjectID: AudioObjectID) -> Bool { taps[processObjectID] != nil }
